@@ -1,21 +1,5 @@
-// import { drizzle } from 'drizzle-orm/postgres-js';
-// // import { migrate } from 'drizzle-orm/postgres-js/migrator';
-// import postgres from 'postgres';
-
-// const DB_URL = process.env.DATABASE_URL as string
-
-// // for migrations
-// const migrationClient = postgres(DB_URL, { max: 1 });
-// // migrate(drizzle(migrationClient), ...)
-
-// // for query purposes
-// const queryClient = postgres(DB_URL);
-// const db = drizzle(queryClient);
-// // await db.select().from(...)...
-
-// export {migrationClient, db}
-
-
+// original author
+// https://discord.com/channels/1043890932593987624/1043890932593987627/1141696708099711148
 
 import * as schema from './schema'
 import { PostgresJsDatabase, drizzle } from 'drizzle-orm/postgres-js'
