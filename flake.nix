@@ -1,5 +1,5 @@
 {
-  description = "Postgresql inside flake";
+  description = "NextJs, HonoJs, drizzle-orm and postgresql dev environment";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
@@ -30,6 +30,8 @@
 
             # db
             postgres
+            # original author to run postgres service
+            # https://elixirforum.com/t/flake-nix-phoenix-postgresql/52622
             (pkgs.writeShellScriptBin "pg-stop" ''
               pg_ctl -D $PGDATA -U postgres stop
             '')

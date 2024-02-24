@@ -1,9 +1,16 @@
 {
+  "name": "greeting-scheduler",
+  "version": "0.1.0",
+  "author": {
+    "name": "indraakkk",
+    "url": "https://github.com/indraakkk/greeting-scheduler"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest --watch"
   },
   "dependencies": {
     "drizzle-orm": "^0.29.4",
@@ -17,11 +24,13 @@
     "@types/node": "^20.11.20",
     "@types/react": "^18.2.58",
     "@types/react-dom": "^18.2.19",
+    "@vitest/ui": "^1.3.1",
     "autoprefixer": "^10.4.17",
     "drizzle-kit": "^0.20.14",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.1.0",
     "pg": "^8.11.3",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^1.3.1"
   }
 }

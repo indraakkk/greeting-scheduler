@@ -1,19 +1,19 @@
-import {Hono } from 'hono'
-import {handle} from 'hono/vercel'
+import { Hono } from 'hono'
+import { handle } from 'hono/vercel'
 
 export const runtime = 'edge'
 
 const app = new Hono().basePath('/api')
 
-app.get('/hono', async(c) => {
+app.get('/hono', async (c) => {
   return c.json({
-    message: `Hello from HonoJs`
+    message: `Hello from HonoJs`,
   })
 })
 
-app.post('/hono', async(c) => {
+app.post('/hono', async (c) => {
   return c.json({
-    message: `Hello from HonoJs`
+    message: `Hello from HonoJs`,
   })
 })
 

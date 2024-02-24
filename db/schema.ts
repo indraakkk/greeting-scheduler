@@ -1,4 +1,4 @@
-import { serial, pgTable, varchar, index } from 'drizzle-orm/pg-core';
+import { serial, pgTable, varchar, index } from 'drizzle-orm/pg-core'
 
 export const usersTable = pgTable(
   'users',
@@ -10,9 +10,9 @@ export const usersTable = pgTable(
   (table) => {
     return {
       emailIndex: index('users_email_index').on(table.email),
-    };
+    }
   }
-);
+)
 
-export type UserModel = typeof usersTable.$inferSelect;
-export type InsertUserModel = typeof usersTable.$inferInsert;
+export type UserModel = typeof usersTable.$inferSelect
+export type InsertUserModel = typeof usersTable.$inferInsert
