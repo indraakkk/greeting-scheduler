@@ -16,8 +16,8 @@
         root = ./.;
 
         postgres = pkgs.postgresql_14;
-        node = nodejs_21;
-        pnpm = nodePackages.pnpm;
+        node = pkgs.nodejs_21;
+        pnpm = pkgs.nodePackages.pnpm;
 
       in
       {
