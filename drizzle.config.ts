@@ -1,7 +1,7 @@
 import { Config } from 'drizzle-kit';
 
 const DB_URL = process.env.DATABASE_URL;
-console.log(DB_URL)
+
 export default {
   schema: './db/schema.ts',
   out: './drizzle',
