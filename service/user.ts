@@ -17,7 +17,7 @@ type Payload = {
 } & Event
 
 type Event = {
-  message: string
+  msg: string
   tz: string
   type: string
   send_time: string
@@ -38,7 +38,7 @@ const newUser = async (payload: Payload) => {
       email: payload.email,
       first_name: payload.first_name,
       last_name: payload.last_name,
-      [`${type}_msg`]: payload.message,
+      [`${type}_msg`]: payload.msg,
       [`${type}_tz`]: payload.tz,
       [`${type}_send_status`]: 'init',
       [`${type}_send_time`]: payload.send_time,
@@ -58,7 +58,7 @@ const addEvent = async (payload: AddEvent) => {
     const { type, id } = payload
 
     const data = {
-      [`${type}_msg`]: payload.message,
+      [`${type}_msg`]: payload.msg,
       [`${type}_tz`]: payload.tz,
       [`${type}_send_status`]: 'init',
     }

@@ -28,10 +28,13 @@ export async function POST(req: NextRequest) {
 
 const cronJob = (data: UserModel) => {
   const sendMessage = async (email: string, message: string) => {
+    console.log('in send message function')
     const data = {
       email: email,
       message: message,
     }
+
+    console.log(data)
 
     const req = await fetch(
       'https://email-service.digitalenvision.com.au/send-email',
@@ -45,8 +48,7 @@ const cronJob = (data: UserModel) => {
     )
 
     const result = await req.json()
-
-    return Response.json(result)
+    console.log(result)
   }
 
   const cronExe = (
@@ -68,10 +70,11 @@ const cronJob = (data: UserModel) => {
 
     const job = new cron.CronJob(
       // '1 * * * * *', // cron time
-      cronTimeStr,
-      () => {
+      `0 ${minute} ${hour} ${day} ${month} *`,
+      async () => {
         // run fetch;
-        sendMessage(email, message)
+        console.log('run send message')
+        await sendMessage(email, message)
       },
       () => {
         job.stop
@@ -85,11 +88,12 @@ const cronJob = (data: UserModel) => {
 
   type.forEach(async (t) => {
     const send_status = `${t}_send_status` as keyof UserModel
-    const send_time = `${t}_send_time` as keyof UserModel
-    const message = `${t}_message` as keyof UserModel
-    const tz = `${t}_tz` as keyof UserModel
 
     if (data[send_status] === 'init') {
+      const send_time = `${t}_send_time` as keyof UserModel
+      const message = `${t}_msg` as keyof UserModel
+      const tz = `${t}_tz` as keyof UserModel
+
       // run node cron
       cronExe(
         data[send_time] as string, // format "2024-02-27 09:20:00"
