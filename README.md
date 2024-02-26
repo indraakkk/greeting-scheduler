@@ -16,8 +16,8 @@
 
 # How to run
 
-- Install nix if not exist [text](#install-nix)
-- Run Nix command
+- Install nix if not exist [Install NixOs](#install-nix)
+- Inside project folder, run Nix command
 
 ```bash
 nix develop .
