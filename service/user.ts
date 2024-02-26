@@ -2,7 +2,6 @@ import { Context, Env } from 'hono'
 import { BlankInput } from 'hono/types'
 import { db, eq } from '../db/drizzle'
 import { UserModel, users } from '../db/schema'
-import { createId } from '@paralleldrive/cuid2'
 
 type ContextType<T extends string> = Context<Env, T, BlankInput>
 
@@ -10,7 +9,7 @@ const getUser = (c: ContextType<'/'>) => {
   return c.text('noice!')
 }
 
-type PayloadType = {
+type Payload = {
   id?: number
   email: string
   first_name: string
@@ -21,6 +20,7 @@ type Event = {
   message: string
   tz: string
   type: string
+  send_time: string
 }
 
 type AddEvent = {
@@ -28,7 +28,7 @@ type AddEvent = {
 } & Event
 
 // const newUser = async (c: ContextType<'/'>) => {  //can't continue to use honojs-edgefunction | node:crypto error
-const newUser = async (payload: PayloadType) => {
+const newUser = async (payload: Payload) => {
   try {
     // define data with message: 'birthday_msg | anniversary_msg'
     const { type } = payload
@@ -41,7 +41,7 @@ const newUser = async (payload: PayloadType) => {
       [`${type}_msg`]: payload.message,
       [`${type}_tz`]: payload.tz,
       [`${type}_send_status`]: 'init',
-      [`${type}_cronid`]: createId(),
+      [`${type}_send_time`]: payload.send_time,
     }
 
     const store = await db.insert(users).values(data).returning()
@@ -61,16 +61,28 @@ const addEvent = async (payload: AddEvent) => {
       [`${type}_msg`]: payload.message,
       [`${type}_tz`]: payload.tz,
       [`${type}_send_status`]: 'init',
-      [`${type}_cronid`]: createId(),
     }
     const update = await db
       .update(users)
       .set(data)
       .where(eq(users.id, id))
       .returning()
-
     console.log(update)
-  } catch (error) {}
+    return update
+  } catch (error) {
+    throw new Error(`${error}`)
+  }
 }
 
-export { newUser, getUser, addEvent }
+// add birthday | anniversary event to existing user
+const deleteUser = async (id: number) => {
+  try {
+    const destroy = await db.delete(users).where(eq(users.id, id)).returning()
+    console.log(destroy)
+    return destroy
+  } catch (error) {
+    throw new Error(`${error}`)
+  }
+}
+
+export { newUser, getUser, deleteUser, addEvent }

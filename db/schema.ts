@@ -6,7 +6,6 @@ import {
   timestamp,
   text,
 } from 'drizzle-orm/pg-core'
-import { createId } from '@paralleldrive/cuid2'
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
@@ -16,13 +15,13 @@ export const users = pgTable('users', {
 
   birthday_msg: text('birthday_msg'),
   birthday_send_status: varchar('birthday_send_status', { length: 256 }),
+  birthday_send_time: varchar('birthday_send_time', { length: 256 }),
   birthday_tz: varchar('birthday_tz', { length: 256 }),
-  birthday_cron: text('birthday_cron'),
 
   anniversary_msg: text('anniversary_msg'),
   anniversary_send_status: varchar('anniversary_send_status', { length: 256 }),
+  anniversary_send_time: varchar('anniversary_send_time', { length: 256 }),
   anniversary_tz: varchar('anniversary_tz', { length: 256 }),
-  anniversary_cron: text('anniversary_cron'),
 
   created_at: timestamp('created_at', {
     mode: 'date',
