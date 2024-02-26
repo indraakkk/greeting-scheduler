@@ -1,18 +1,34 @@
-import { serial, pgTable, varchar, index } from 'drizzle-orm/pg-core'
+import {
+  serial,
+  pgTable,
+  varchar,
+  index,
+  timestamp,
+  text,
+} from 'drizzle-orm/pg-core'
+import { createId } from '@paralleldrive/cuid2'
 
-export const usersTable = pgTable(
-  'users',
-  {
-    id: serial('id').primaryKey(),
-    email: varchar('email', { length: 256 }).unique().notNull(),
-    status: varchar('status', { length: 256 }),
-  },
-  (table) => {
-    return {
-      emailIndex: index('users_email_index').on(table.email),
-    }
-  }
-)
+export const users = pgTable('users', {
+  id: serial('id').primaryKey(),
+  email: varchar('email', { length: 256 }).unique().notNull(),
+  first_name: varchar('first_name', { length: 256 }),
+  last_name: varchar('last_name', { length: 256 }),
 
-export type UserModel = typeof usersTable.$inferSelect
-export type InsertUserModel = typeof usersTable.$inferInsert
+  birthday_msg: text('birthday_msg'),
+  birthday_send_status: varchar('birthday_send_status', { length: 256 }),
+  birthday_tz: varchar('birthday_tz', { length: 256 }),
+  birthday_cron: text('birthday_cron'),
+
+  anniversary_msg: text('anniversary_msg'),
+  anniversary_send_status: varchar('anniversary_send_status', { length: 256 }),
+  anniversary_tz: varchar('anniversary_tz', { length: 256 }),
+  anniversary_cron: text('anniversary_cron'),
+
+  created_at: timestamp('created_at', {
+    mode: 'date',
+    withTimezone: false,
+  }).defaultNow(),
+})
+
+export type UserModel = typeof users.$inferSelect
+export type InsertUserModel = typeof users.$inferInsert

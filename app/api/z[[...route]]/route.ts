@@ -1,10 +1,10 @@
 import { Hono } from 'hono'
 import { handle } from 'hono/vercel'
 
+export const runtime = 'edge'
+
 // routes grouping
 import { user } from './user.route'
-
-export const runtime = 'edge'
 
 const app = new Hono().basePath('/api')
 
