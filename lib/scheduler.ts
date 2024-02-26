@@ -3,14 +3,20 @@ import { UserModel } from '../db/schema'
 import { updateUser } from '../service/user'
 import * as cron from 'cron'
 
-const sendMessage = async (email: string, message: string) => {
+type DataArgType = {
+  id: number
+  [key: string]: string | number | undefined
+}
+
+const sendMessage = async (data: DataArgType) => {
   console.log('in send message function')
-  const data = {
+
+  const { email, message } = data
+
+  const sendData = {
     email: email,
     message: message,
   }
-
-  console.log(data)
 
   const send_email_url = process.env.SEND_EMAIL_URL as string
 
@@ -19,24 +25,29 @@ const sendMessage = async (email: string, message: string) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(sendData),
   })
 
   const result = await req.json()
+
+  // update user data
+  const status = { [`${data.type}_send_status`]: 'success' }
+  await updateUser(data.id, status)
+
   console.log(result)
 }
 
-const cronExe = (time: string, tz: string, email: string, message: string) => {
+const cronExe = (data: DataArgType) => {
+  const { time, id, email, message, type, tz } = data
+
   const m = moment(time)
   const minute = m.minutes()
   const hour = m.hours()
-  const day = m.format('DD')
+  const day = m.date()
   const month = m.format('M')
 
-  const cronTimeStr = `* ${minute} ${hour} ${day} ${month} *`
-
-  console.log([minute, hour, day, month, m.format('DD-MM-YY hh:mm')])
-  console.log(cronTimeStr)
+  console.log([minute, hour, day, month, time])
+  console.log(`0 ${minute} ${hour} ${day} ${month} *`)
 
   const job = new cron.CronJob(
     // '1 * * * * *', // cron time
@@ -44,13 +55,19 @@ const cronExe = (time: string, tz: string, email: string, message: string) => {
     async () => {
       // run fetch;
       console.log('run send message')
-      await sendMessage(email, message)
+      const dataToUpdate = {
+        id: id,
+        email: email,
+        message: message,
+        type: type,
+      }
+      await sendMessage(dataToUpdate)
     },
     () => {
       job.stop
     },
     true,
-    tz
+    tz as string
   )
 }
 const cronJob = (data: UserModel) => {
@@ -65,12 +82,16 @@ const cronJob = (data: UserModel) => {
       const tz = `${t}_tz` as keyof UserModel
 
       // run node cron
-      cronExe(
-        data[send_time] as string, // format "2024-02-27 09:20:00"
-        data[tz] as string,
-        data.email,
-        data[message] as string
-      )
+      const cronData = {
+        id: data.id,
+        time: data[send_time] as string, // format "2024-02-27 09:20:00"
+        tz: data[tz] as string,
+        email: data.email,
+        message: data[message] as string,
+        type: t,
+      }
+
+      cronExe(cronData)
 
       // update status
       const userObj = { [send_status]: 'process' }
