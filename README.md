@@ -7,8 +7,8 @@
 
 # Libraries
 
-- Moment.js
-- Node Cron
+- [Moment.js](https://momentjs.com/docs/)
+- [Node Cron](https://github.com/kelektiv/node-cron)
 
 # Development Environment
 
