@@ -10,7 +10,6 @@ const getUser = (c: ContextType<'/'>) => {
 }
 
 type Payload = {
-  id?: number
   email: string
   first_name: string
   last_name: string
@@ -74,7 +73,25 @@ const addEvent = async (payload: AddEvent) => {
   }
 }
 
-// add birthday | anniversary event to existing user
+// update selected user
+const updateUser = async (
+  id: number,
+  data: { [key: string]: string | number }
+) => {
+  try {
+    const update = await db
+      .update(users)
+      .set(data)
+      .where(eq(users.id, id))
+      .returning()
+
+    return update
+  } catch (error) {
+    throw new Error(`${error}`)
+  }
+}
+
+// delete selected user
 const deleteUser = async (id: number) => {
   try {
     const destroy = await db.delete(users).where(eq(users.id, id)).returning()
@@ -85,4 +102,4 @@ const deleteUser = async (id: number) => {
   }
 }
 
-export { newUser, getUser, deleteUser, addEvent }
+export { newUser, getUser, updateUser, deleteUser, addEvent }
