@@ -12,16 +12,15 @@ const sendMessage = async (email: string, message: string) => {
 
   console.log(data)
 
-  const req = await fetch(
-    'https://email-service.digitalenvision.com.au/send-email',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    }
-  )
+  const send_email_url = process.env.SEND_EMAIL_URL as string
+
+  const req = await fetch(send_email_url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
 
   const result = await req.json()
   console.log(result)
