@@ -41,6 +41,8 @@ pg-console
 
 \*pg-console is to check if you can access the Postgresql console
 
+- Run NextJs app using `pnpm dev` or if you using vscode, go to debugger sidebay, click green arrow to start project
+
 # Install Nix
 
 - follow this tutorial from [zero-to-nix](https://zero-to-nix.com/start/install)
