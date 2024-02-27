@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { deleteUser, newUser } from '../../../service/user'
+import { deleteUser, newUser, updateUserDetail } from '../../../service/user'
 import { cronJob } from '../../../lib/scheduler'
 
 export async function POST(req: NextRequest) {
@@ -30,7 +30,7 @@ export async function DELETE(req: NextRequest) {
     // delete selected use
     const data = await deleteUser(id)
 
-    // stop cron job for selected user
+    // TO DO: stop cron job for selected user
 
     return NextResponse.json({
       success: true,
@@ -43,8 +43,35 @@ export async function DELETE(req: NextRequest) {
   }
 }
 
-export async function PUT() {
+export async function PUT(req: NextRequest) {
   try {
     // update user data
-  } catch (error) {}
+    /**
+     * payload example
+     *
+     * {
+     *   "id": 43,
+     *   "type": "birthday",
+     *   "message": "Heavy Beerday John!",
+     *   "first_name": "john", // optional
+     *   "last_name": "doe" // optional
+     * }
+     *
+     */
+
+    const payload = await req.json()
+
+    const data = await updateUserDetail(payload)
+
+    // TO DO: update user detail to CRON job if still running
+
+    return NextResponse.json({
+      success: true,
+      message: 'Successfully update user',
+      data: data,
+    })
+  } catch (error) {
+    const e = error as Error
+    return NextResponse.json({ message: e.message }, { status: 500 })
+  }
 }

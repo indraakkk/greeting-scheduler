@@ -73,7 +73,7 @@ const addEvent = async (payload: AddEvent) => {
   }
 }
 
-// update selected user
+// update selected user without checking greeting type
 const updateUser = async (
   id: number,
   data: { [key: string]: string | number }
@@ -91,6 +91,39 @@ const updateUser = async (
   }
 }
 
+// update user detail based on greeting type
+type UpdateUserDetailOpt = {
+  [key: string]: string | number
+}
+
+type UpdateUserDetail = {
+  id: number
+  type: string
+  msg: string
+} & UpdateUserDetailOpt
+
+const updateUserDetail = async (payload: UpdateUserDetail) => {
+  try {
+    const { type, id } = payload
+    const data: UpdateUserDetailOpt = {
+      [`${type}_msg`]: payload.msg,
+    }
+
+    if (payload.first_name) data.first_name = payload.first_name
+    if (payload.last_name) data.last_name = payload.last_name
+
+    const update = await db
+      .update(users)
+      .set(data)
+      .where(eq(users.id, id))
+      .returning()
+
+    return update[0] as UserModel
+  } catch (error) {
+    throw new Error(`${error}`)
+  }
+}
+
 // delete selected user
 const deleteUser = async (id: number) => {
   try {
@@ -102,4 +135,35 @@ const deleteUser = async (id: number) => {
   }
 }
 
-export { newUser, getUser, updateUser, deleteUser, addEvent }
+export { newUser, getUser, updateUser, updateUserDetail, deleteUser, addEvent }
+
+// type UserBase = {
+//   type: string
+// }
+
+// type NewUser = {
+//   email: string
+// }
+
+// type UpdateUser = {
+//   msg: string
+// }
+
+// type Onlys = NewUser | UpdateUser
+
+// // const testestste = dynamicTp({type: 'birthday', })
+
+// const xy = <T extends Onlys>(payload: T): UserBase & T => {
+//   const data = { type: 'asdasd', ...payload }
+//   return data
+// }
+
+// // const dynamicTp = <T extends Onlys>(payload: T, action: string): UserBase & T => {
+
+// //   return {
+// //     ...payload,
+// //   }
+// // }
+
+// // const x = dynamicTp({tz: 'asdasd', anything: 'anyanaya'})
+// // x.
