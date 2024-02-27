@@ -20,21 +20,27 @@ const sendMessage = async (data: DataArgType) => {
 
   const send_email_url = process.env.SEND_EMAIL_URL as string
 
-  const req = await fetch(send_email_url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(sendData),
-  })
+  try {
+    const req = await fetch(send_email_url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(sendData),
+    })
 
-  const result = await req.json()
+    const result = await req.json()
 
-  // update user data
-  const status = { [`${data.type}_send_status`]: 'success' }
-  await updateUser(data.id, status)
+    // update user data
+    const status = { [`${data.type}_send_status`]: 'success' }
+    await updateUser(data.id, status)
 
-  console.log(result)
+    console.log(result)
+    return result
+  } catch (error) {
+    const e: Error = error as Error
+    throw new Error(e.message)
+  }
 }
 
 const cronExe = (data: DataArgType) => {
@@ -70,6 +76,7 @@ const cronExe = (data: DataArgType) => {
     tz as string
   )
 }
+
 const cronJob = (data: UserModel) => {
   const type = ['birthday', 'anniversary']
 
